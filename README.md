@@ -54,8 +54,11 @@ self.positions = {
 # Core Logic Overview
 The navigation node implements a state machine that manages orders, confirmations, and navigation tasks.
 Main Components
+
 State Variables
+
 state: Current robot state (idle, to_kitchen, to_table, returning_to_kitchen, returning_home)
+
 orders[]: Queue of active orders
 current_order_index: Currently processed order
 current_table_index: Current table within the order
