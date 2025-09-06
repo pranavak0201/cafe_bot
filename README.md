@@ -53,6 +53,7 @@ self.positions = {
 ```
 # Core Logic Overview
 The navigation node implements a state machine that manages orders, confirmations, and navigation tasks.
+
 Main Components
 
 State Variables
@@ -60,18 +61,31 @@ State Variables
 state: Current robot state (idle, to_kitchen, to_table, returning_to_kitchen, returning_home)
 
 orders[]: Queue of active orders
+
 current_order_index: Currently processed order
+
 current_table_index: Current table within the order
+
 task_active: Whether the robot is busy
+
 Confirmation Tracking
+
 kitchen_confirmed: Kitchen confirmation flag
+
 table_confirmations{}: Tracks confirmations for each table
+
 Timeout tracking via kitchen_start_time and table_start_time
+
 Order Processing Flow
+
 Wait for orders on /orders topic.
+
 Move to kitchen → wait for kitchen confirmation (or timeout).
+
 Deliver to each table in the order → wait for confirmation (or timeout).
+
 Return to kitchen if more orders remain.
+
 Return to home when all orders are done.
 
 ## How to Run
