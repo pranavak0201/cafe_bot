@@ -135,6 +135,66 @@ ros2 topic pub /orders std_msgs/msg/String \
   '{"data": "{\"table\": \"table1\", \"status\": \"canceled\"}"}' --once
 
 ```
+Case 3b – Order cancellation while going to table
+``` Bash
+# Send order
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"table\": \"table1\"}"}' --once
+
+# Send kitchen confirmation after ~3 seconds
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"table\": \"table1\", \"confirmed\": true}"}' --once
+
+# Send cancellation while robot is moving to table (after ~6-8 seconds total)
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"table\": \"table1\", \"status\": \"canceled\"}"}' --once
+```
+Case 4 – Multiple orders, all successful
+``` Bash
+# Send multiple table order
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"new_order\", \"tables\": [\"table1\", \"table2\", \"table3\"], \"case_type\": 5}"}' --once
+
+# Send kitchen confirmation after robot reaches kitchen (~3 seconds)
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"location\": \"kitchen\"}"}' --once
+
+# Send table confirmations as robot reaches each table (wait for robot to arrive at each)
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table1\"}"}' --once
+
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table2\"}"}' --once
+
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table3\"}"}' --once
+```
+Case 5 – Multiple orders, no confirmation at table1
+``` Bash
+# Send multiple table order with case 6
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"new_order\", \"tables\": [\"table1\", \"table2\", \"table3\"], \"case_type\": 6}"}' --once
+
+# Send kitchen confirmation
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"location\": \"kitchen\"}"}' --once
+
+# DON'T confirm table1 - let it timeout
+# Confirm table2 when robot arrives there
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table2\"}"}' --once
+
+# Confirm table3 when robot arrives there  
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table3\"}"}' --once
+```
+Case 5 – Multiple orders, table2 canceled
+``` Bash
+# Send multiple table order
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"new_order\", \"tables\": [\"table1\", \"table2\", \"table3\"], \"case_type\": 7}"}' --once
+
+# Send kitchen confirmation
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"location\": \"kitchen\"}"}' --once
+
+# Cancel table2 order (send after kitchen confirmation)
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"cancel\", \"table\": \"table2\"}"}' --once
+
+# Confirm remaining tables
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table1\"}"}' --once
+
+ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table3\"}"}' --once
+```
+
+
+
 # Notes
 The system supports multiple sequential orders.
 Most cases work as expected.
