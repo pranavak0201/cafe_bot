@@ -6,7 +6,6 @@ Navigates between home, kitchen, and customer tables
 Handles order confirmations and timeouts
 Processes multiple orders sequentially
 Manages order cancellations and failures
----
 
 ## Package Structure
 ```bash
@@ -192,6 +191,10 @@ ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", 
 
 ros2 topic pub /orders std_msgs/msg/String '{"data": "{\"action\": \"confirm\", \"table\": \"table3\"}"}' --once
 ```
+
+# Video
+
+https://drive.google.com/file/d/1Mmah91TkNuD2p2a-xRy9XIfJExkRl_cO/view?usp=sharing
 
 
 
